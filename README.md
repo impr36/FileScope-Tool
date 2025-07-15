@@ -68,8 +68,11 @@ cd filescope-tool
 python -m venv venv
 source venv/bin/activate  # On Windows: .\venv\Scripts\activate
 
+# Install all the Wheel(.whl) files first:
+pip install -r wheels-require.txt
+
 # Install dependencies for window and linux
-pip install -r requirements.txt
+pip install -r requirements.txt  
 ```
 Dependencies include:
 ```
