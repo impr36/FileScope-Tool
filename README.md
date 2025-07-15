@@ -94,12 +94,10 @@ reportlab
 ### ▶️ Run the Tool
 ```bash
 python gui3.py
-Drag and drop a file into the GUI or click to browse. FileScope will analyze it and display results. You can also generate a detailed PDF report.
-
+#Drag and drop a file into the GUI or click to browse. FileScope will analyze it and display results. You can also generate a detailed PDF report.
+```
 📁 Project Structure
-bash
-Copy
-Edit
+```bash
 filescope-tool/
 ├── CheckMagic.py       # Magic number detection logic
 ├── file_analyzer.py   # Core file analysis logic
@@ -116,19 +114,14 @@ Launch the GUI:
 python gui3.py
 Drag-and-drop or use the file picker to select a file.
 ```
-View:
+### View:
 
-File type and extension match
-
-Timestamps and metadata
-
-Hash values (MD5/SHA1/SHA256)
-
-Entropy graph
-
-Risk score & possible threats
-
-Click to export a full PDF report.
+-File type and extension match
+-Timestamps and metadata
+-Hash values (MD5/SHA1/SHA256)
+-Entropy graph
+-Risk score & possible threats
+-Click to export a full PDF report.
 
 ### 🛠️ Troubleshooting
 ❌ Windows: ImportError: failed to find libmagic
