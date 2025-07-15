@@ -130,10 +130,9 @@ Make sure python-magic-bin is installed:
 ```bash
 
 pip install python-magic-bin
-If the error persists:
 ```
+If the error persists:
 Download magic.dll and magic.mgc from: https://github.com/nscaife/file-win32/releases
-
 Place them in C:\Windows\System32 or add to your PATH.
 
 ### 🐧 Linux: Missing Dependencies
