@@ -72,7 +72,7 @@ source venv/bin/activate  # On Windows: .\venv\Scripts\activate
 pip install -r requirements.txt
 ```
 Dependencies include:
-
+```
 matplotlib
 python-magic-bin      # Use python-magic on Linux
 numpy
@@ -90,7 +90,7 @@ striprtf
 tkinterdnd2
 reportlab
 ⚠️ Windows users: If python-magic-bin fails, manually install libmagic. See Troubleshooting.
-
+```
 ### ▶️ Run the Tool
 ```bash
 python gui3.py
@@ -132,7 +132,7 @@ Make sure python-magic-bin is installed:
 pip install python-magic-bin
 ```
 If the error persists:
-Download magic.dll and magic.mgc from: https://github.com/nscaife/file-win32/releases
+Download magic.dll and magic.mgc from: https://github.com/nscaife/file-win32/releases.
 Place them in C:\Windows\System32 or add to your PATH.
 
 ### 🐧 Linux: Missing Dependencies
