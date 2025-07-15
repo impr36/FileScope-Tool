@@ -64,11 +64,11 @@ FileScope is a powerful, open-source Python tool for in-depth file analysis. Whe
 git clone https://github.com/your-username/filescope-tool.git
 cd filescope-tool
 
-# (Recommended) Create a virtual environment
+# (Recommended) Create a virtual environment for linux
 python -m venv venv
 source venv/bin/activate  # On Windows: .\venv\Scripts\activate
 
-# Install dependencies
+# Install dependencies for window and linux
 pip install -r requirements.txt
 ```
 Dependencies include:
@@ -102,9 +102,9 @@ Copy
 Edit
 filescope-tool/
 ├── CheckMagic.py       # Magic number detection logic
-├── file_analyzer3.py   # Core file analysis logic
+├── file_analyzer.py   # Core file analysis logic
 ├── magic_db.py         # Signature database
-├── gui3.py             # GUI application
+├── GUI.py             # GUI application
 ├── requirements.txt    # Dependency list
 └── README.md           # This file
 ```
