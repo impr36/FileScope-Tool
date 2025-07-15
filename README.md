@@ -1,50 +1,164 @@
-# FileScope-Tool
-Magic Number Check:
--The magic_db was incorrectly placed inside the magic_number_check method. It has been moved to the appropriate scope within the method for clarity. -Added bounds checking in the match_magic function to prevent index errors when the file is too small to contain the header or footer. -Fixed the Photoshop entry in magic_db (changed "FromHead" to "8BPS" for correct PSD file identification). -Added error handling to catch and report issues during file reading or magic number analysis. -Ensured file_type is properly defined by storing it in the instance (self.file_type) after the MIME detection.
+FileScope 🔍
+Uncover the Secrets of Your Files!
+FileScope is a powerful, open-source Python tool designed to analyze files with precision and ease. Whether you're a cybersecurity enthusiast, a developer, or just curious about what’s inside your files, FileScope provides deep insights into file types, metadata, entropy, and potential risks—all wrapped in a user-friendly GUI with drag-and-drop support and PDF report generation.
+✨ Features
 
-Error Handling:
--Added comprehensive error handling across all analysis methods (magic_number_check, entropy_analysis, header_spoof_check, byte_pattern_analysis, structure_validation, display_results, plot_entropy, and export_pdf) to prevent crashes and provide meaningful feedback to the user via the output text box or message boxes. -Added checks for empty files or invalid file paths in analyze_file and other methods.
+Comprehensive File Analysis:
 
-Entropy Plot:
--Fixed the entropy plot to dynamically calculate bar width based on the number of entropy values to prevent overlap or incorrect scaling. -Added error handling to display an error message on the canvas if plotting fails.
+Identifies file types using magic numbers and a robust database of over 80 file signatures.
+Analyzes file metadata, including creation, modification, and access times.
+Computes MD5, SHA1, and SHA256 hashes for file integrity verification.
+Performs entropy analysis to detect potential obfuscation or encryption.
+Checks for header spoofing and validates file structures.
+Extracts embedded objects and metadata from formats like PDF, ZIP, JPEG, MP3, and more.
 
-Debug Information:
--Added a Debug field to analysis_results["magic"] to store detailed information about what happened during the analysis. -The match_magic function now returns a tuple containing the matched entry (or None) and a debug message explaining why no match was found. -Debug messages are inserted into the output text box to help identify the issue (e.g., "Empty file or no data read" or "No matching magic number found").
 
-File Validation:
--Added an explicit check for file existence and readability at the start of the method.
+Supported File Formats:
 
-Improved MIME Detection:
--Stored the file_type in self.file_type to ensure it's available for other methods. -Added error handling to catch issues with python-magic and report them in the output.
+Images (JPEG, PNG, GIF, BMP)
+Archives (ZIP, RAR, 7z, TAR, GZIP)
+Audio/Video (MP3, FLAC, Ogg, MP4, WEBM)
+Documents (PDF, RTF, XML, JSON)
+Executables (EXE, ELF) and fonts (TTF, OTF)
+And many more (see magic_db.py for the full list)!
 
-Robust Magic Number Matching:
--Ensured the file is checked for sufficient length before attempting to match headers or footers. -Added a check for empty files in match_magic.
 
-Output Enhancement:
--The debug information is displayed in the output text box, making it easier to see why the file type is "Unknown".
+Interactive GUI:
 
-Notes:
-The code assumes the tkinterdnd2, python-magic, and reportlab libraries are installed. Ensure they are available in your environment: pip install tkinterdnd2 python-magic reportlab
+Built with Tkinter and TkinterDnD2 for drag-and-drop file selection.
+Displays detailed analysis results in an intuitive interface.
+Generates professional PDF reports with embedded entropy graphs using ReportLab.
 
-On some systems, python-magic-bin may be needed instead of python-magic for Windows compatibility: pip install python-magic-bin
 
-The magic library requires libmagic to be installed on the system (e.g., libmagic1 on Ubuntu or file on macOS via Homebrew).
+Modular Design:
 
-The entropy graph is a simple visualization. You may want to enhance it with labels or a scale for better usability.
+Separated logic for magic number checking (CheckMagic.py) and file signatures (magic_db.py).
+Extensible architecture for adding new file types and analysis methods.
 
-The byte_pattern_analysis method uses a simplistic approach to EXE detection. Consider expanding the bigram database or using more sophisticated pattern analysis for real-world use.
 
-Installation Commands(terminal VS Code):
-curl -o python-installer.exe https://www.python.org/ftp/python/3.13.0/python-3.13.0-amd64.exe python --version pip --version
+Security Insights:
 
-DON'T FOREGET TO SET PATH IN THE ENVIRONMENT VARIABLES(IF NOT ADDED)
+Detects potential spoofing and suspicious embedded objects (e.g., JavaScript in PDFs).
+Calculates risk scores based on file characteristics.
+Identifies executable-like patterns in non-executable files.
 
-pip install numpy
 
-pip install tkinterdnd2
 
-pip install python-magic-bin
+🚀 Getting Started
+Prerequisites
 
-pip install reportlab
+Python: Version 3.11 or 3.12 (Python 3.13 may have compatibility issues with some dependencies).
+System Dependencies (for Linux users):
+Install libmagic1 for file type detection: sudo apt-get install libmagic1
+Install Tkinter: sudo apt-get install python3-tk
+Install TkinterDnD2 dependencies (if needed): sudo apt-get install python3-tkinterdnd2
 
-pip install matplotlib
+
+
+Installation
+
+Clone the Repository:
+git clone https://github.com/your-username/filescope-tool.git
+cd filescope-tool
+
+
+Set Up a Virtual Environment (recommended):
+python -m venv venv
+source venv/bin/activate  # On Windows: .\venv\Scripts\activate
+
+
+Install Dependencies:
+pip install -r requirements.txt
+
+The requirements.txt includes:
+matplotlib
+python-magic-bin  # Use python-magic on Linux
+numpy
+PyPDF2
+mutagen
+Pillow
+pydicom
+mido
+py7zr
+rarfile
+pycdlib
+fonttools
+pymediainfo
+striprtf
+tkinterdnd2
+reportlab
+
+Note for Windows Users: If python-magic-bin fails, ensure libmagic is installed (see Troubleshooting).
+
+Run the Tool:
+python gui3.py
+
+Drag and drop a file onto the GUI or click to select a file for analysis. Results are displayed in the GUI, and you can generate a PDF report with detailed findings.
+
+
+📂 Project Structure
+filescope-tool/
+├── CheckMagic.py       # Magic number checking logic
+├── file_analyzer3.py   # Core file analysis class
+├── magic_db.py        # Database of file signatures
+├── gui3.py            # GUI implementation with Tkinter
+├── requirements.txt    # Python dependencies
+└── README.md          # This file
+
+🖱️ Usage
+
+Launch gui3.py to open the FileScope GUI.
+Drag and drop a file or use the file picker to select a file.
+View the analysis results, including:
+File type and extension validation
+Metadata (creation/modification times, hashes)
+Entropy analysis with a visual graph
+Risk score and potential security issues
+
+
+Click to generate a PDF report summarizing the analysis, complete with an entropy distribution graph.
+
+🛠️ Troubleshooting
+
+Windows: ImportError: failed to find libmagic:
+Ensure python-magic-bin is installed (pip install python-magic-bin).
+Alternatively, install libmagic manually:
+Download from https://github.com/nscaife/file-win32/releases.
+Add magic.dll and magic.mgc to C:\Windows\System32 or your PATH.
+
+
+
+
+Linux: Missing system dependencies:
+Install libmagic1: sudo apt-get install libmagic1.
+Install Tkinter: sudo apt-get install python3-tk.
+
+
+Python 3.13 Issues: Some packages (e.g., tkinterdnd2, pydicom) may not support Python 3.13. Use Python 3.11 or 3.12:python3.11 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+
+RPM Analysis: The rpm module is not included as it’s Linux-specific and unsupported on Windows. The code handles this gracefully with a try-except block.
+
+🤝 Contributing
+Contributions are welcome! To contribute:
+
+Fork the repository.
+Create a feature branch (git checkout -b feature/your-feature).
+Commit your changes (git commit -m "Add your feature").
+Push to the branch (git push origin feature/your-feature).
+Open a pull request.
+
+Please include tests and update documentation for new features.
+📜 License
+This project is licensed under the MIT License. See the LICENSE file for details.
+🙌 Acknowledgments
+
+Built with Python, Tkinter, and ReportLab.
+Inspired by the need for accessible, open-source file analysis tools.
+Thanks to the open-source community for libraries like python-magic, Pillow, and mutagen.
+
+📬 Contact
+Have questions or suggestions? Open an issue or reach out to your-username.
+FileScope: See Beyond the Surface of Your Files! 🔍
