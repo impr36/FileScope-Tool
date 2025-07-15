@@ -116,12 +116,12 @@ Drag-and-drop or use the file picker to select a file.
 ```
 ### View:
 
--File type and extension match
--Timestamps and metadata
--Hash values (MD5/SHA1/SHA256)
--Entropy graph
--Risk score & possible threats
--Click to export a full PDF report.
+-File type and extension match  
+-Timestamps and metadata  
+-Hash values (MD5/SHA1/SHA256)  
+-Entropy graph  
+-Risk score & possible threats  
+-Click to export a full PDF report.  
 
 ### 🛠️ Troubleshooting
 ❌ Windows: ImportError: failed to find libmagic
@@ -132,16 +132,16 @@ Make sure python-magic-bin is installed:
 pip install python-magic-bin
 ```
 If the error persists:
-Download magic.dll and magic.mgc from: https://github.com/nscaife/file-win32/releases.
-Place them in C:\Windows\System32 or add to your PATH.
+Download magic.dll and magic.mgc from: https://github.com/nscaife/file-win32/releases.  
+Place them in C:\Windows\System32 or add to your PATH.  
 
 ### 🐧 Linux: Missing Dependencies
 ```bash
 sudo apt-get install libmagic1 python3-tk
 🐍 Python 3.13 Compatibility
 ```
-Some packages (like pydicom, tkinterdnd2) may not work with Python 3.13. Use:
-
+Some packages (like pydicom, tkinterdnd2) may not work with Python 3.13.   
+Use:  
 ```bash
 python3.11 -m venv venv
 source venv/bin/activate
