@@ -42,3 +42,5 @@ import pymediainfo
 from striprtf.striprtf import rtf_to_text
 import winreg
 import gzip
+import exiftool
+import yara
