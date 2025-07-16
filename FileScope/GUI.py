@@ -1,4 +1,5 @@
 from Imports import*
+from file_analyzer import FileAnalyzer
 
 class FileScope:
     def __init__(self, root):
