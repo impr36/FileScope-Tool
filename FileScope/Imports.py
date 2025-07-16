@@ -47,3 +47,4 @@ import winreg
 import gzip
 import exiftool
 import yara
+import rpm
