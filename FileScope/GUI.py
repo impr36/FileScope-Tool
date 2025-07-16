@@ -1,5 +1,14 @@
-from Imports import*
-from file_analyzer import FileAnalyzer
+import tkinter as tk
+from tkinter import filedialog, messagebox, ttk
+from tkinterdnd2 import DND_FILES, TkinterDnD
+from file_analyzer2 import FileAnalyzer
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Image
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import inch
+import os
+import datetime
+from io import BytesIO
 
 class FileScope:
     def __init__(self, root):
@@ -11,6 +20,7 @@ class FileScope:
         self.root.rowconfigure(0, weight=1)
         self.root.columnconfigure(0, weight=1)
 
+        # Configure style
         style = ttk.Style()
         style.theme_use("clam")
         style.configure("TButton", font=("Segoe UI", 10, "bold"), padding=8, background="#5c6bc0", foreground="white", borderwidth=0)
@@ -19,14 +29,17 @@ class FileScope:
         style.configure("TFrame", background="#25273a")
         style.configure("TProgressbar", thickness=20)
 
+        # Main Frame (responsive)
         main_frame = ttk.Frame(self.root)
         main_frame.grid(row=0, column=0, sticky="nsew", padx=20, pady=10)
         main_frame.rowconfigure(3, weight=1)
         main_frame.columnconfigure(0, weight=1)
 
+        # Title
         self.label = ttk.Label(main_frame, text="🔍 FileScope Forensic Analyzer", font=("Segoe UI", 16, "bold"))
         self.label.grid(row=0, column=0, pady=(5, 10))
 
+        # Drop Zone
         drop_frame = ttk.Frame(main_frame, style="TFrame")
         drop_frame.grid(row=1, column=0, sticky="ew", pady=5)
         drop_frame.columnconfigure(0, weight=1)
@@ -39,6 +52,7 @@ class FileScope:
         self.drop_zone.drop_target_register(DND_FILES)
         self.drop_zone.dnd_bind("<<Drop>>", self.handle_drop)
 
+        # Button Frame
         button_frame = ttk.Frame(main_frame, style="TFrame")
         button_frame.grid(row=2, column=0, sticky="ew", pady=10)
         self.export_button = ttk.Button(button_frame, text="📤 Export PDF Report", command=self.export_pdf, style="TButton")
@@ -48,10 +62,12 @@ class FileScope:
         self.export_button.bind("<Leave>", lambda e: self.export_button.configure(style="TButton"))
         style.configure("Hover.TButton", background="#7986cb")
 
+        # Progress Bar
         self.progress = ttk.Progressbar(main_frame, mode='indeterminate')
         self.progress.grid(row=3, column=0, sticky="ew", pady=5)
         self.progress.grid_remove()
 
+        # Output Frame + Scrollbar
         output_frame = ttk.Frame(main_frame, style="TFrame")
         output_frame.grid(row=4, column=0, sticky="nsew", pady=10)
         output_frame.rowconfigure(0, weight=1)
@@ -67,12 +83,14 @@ class FileScope:
 
         scrollbar.config(command=self.output_text.yview)
 
+        # Entropy Canvas
         entropy_frame = ttk.Frame(main_frame, style="TFrame")
         entropy_frame.grid(row=5, column=0, sticky="ew", pady=10)
         self.entropy_canvas = tk.Canvas(entropy_frame, height=200, bg="#1a1c2c", highlightthickness=1, highlightbackground="#5c6bc0")
         self.entropy_canvas.pack(fill="both", expand=True, padx=10)
         self.entropy_canvas.create_text(300, 100, text="Entropy Graph", fill="#b0bec5", font=("Segoe UI", 12, "italic"))
 
+        # Initialize file info and analyzer
         self.file_path = None
         self.analyzer = FileAnalyzer()
         self.analysis_results = {}
@@ -156,8 +174,8 @@ class FileScope:
             output += f"  - Entry Point: {self.analysis_results['pe']['Entry Point']}\n"
         if self.analysis_results["magic"]["Embedded Objects"]:
             output += f"- Embedded Objects: {self.analysis_results['magic']['Embedded Objects']}\n"
-        if self.analysis_results["static"].get("notes"):
-            output += f"- Notes: {self.analysis_results['static']['notes']}\n"
+        if self.analysis_results["magic"]["Metadata"]:
+            output += f"- Metadata: FileType={self.analysis_results['magic']['Metadata'].get('FileType', 'UNKNOWN')}, Created={self.analysis_results['magic']['Metadata'].get('CreateDate', 'N/A')}\n"
 
         output += "\n[RECOMMENDATION]\n"
         output += f"Risk Score: {self.analysis_results['risk']['Score']}\n"
@@ -168,8 +186,6 @@ class FileScope:
     def plot_entropy(self):
         entropies = self.analysis_results.get("entropy_chunks", [])
         if not entropies:
-            self.entropy_canvas.delete("all")
-            self.entropy_canvas.create_text(300, 100, text="No Entropy Data", fill="#b0bec5", font=("Segoe UI", 12, "italic"))
             return
 
         self.entropy_canvas.delete("all")
@@ -210,17 +226,9 @@ class FileScope:
 
         reports_dir = "Reports"
         os.makedirs(reports_dir, exist_ok=True)
-        default_filename = f"FileScope_Report_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-        default_path = os.path.join(reports_dir, default_filename)
-
-        pdf_path = filedialog.asksaveasfilename(
-            initialdir=reports_dir,
-            initialfile=default_filename,
-            defaultextension=".pdf",
-            filetypes=[("PDF files", "*.pdf")]
-        )
-        if not pdf_path:
-            return
+        uploaded_filename = os.path.basename(self.file_path).rsplit('.', 1)[0]  # Get filename without extension
+        default_filename = f"FileScope_Report_{uploaded_filename}_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+        pdf_path = os.path.join(reports_dir, default_filename)
 
         doc = SimpleDocTemplate(pdf_path, pagesize=letter, topMargin=0.5*inch, bottomMargin=0.5*inch, leftMargin=0.5*inch, rightMargin=0.5*inch)
         styles = getSampleStyleSheet()
@@ -237,7 +245,7 @@ class FileScope:
         # 1. File Identification
         story.append(Paragraph("1. File Identification", styles['Heading1']))
         file_info = [
-            ["File Name", self.analysis_results['metadata'].get('filename', 'N/A')],
+            ["File Name", os.path.basename(self.file_path)],
             ["File Path", self.file_path],
             ["File Size", f"{os.path.getsize(self.file_path)} bytes"],
             ["File Type", self.analysis_results['magic']['Detected Type']],
@@ -263,7 +271,7 @@ class FileScope:
         story.append(Paragraph("2. Detection Details", styles['Heading1']))
         detection_info = [
             ["Detection Name / Signature ID", self.analysis_results['detection'].get('name', 'N/A')],
-            ["Detection Engine(s)", "FileScope v1.1 (Static Analysis)"],
+            ["Detection Engine(s)", "FileScope v2.0(Static Analysis)"],
             ["Severity Level", self.analysis_results['risk']['Level']],
             ["Confidence Score", f"{self.analysis_results['risk']['Score']}/100"],
             ["Detection Timestamp", datetime.datetime.now().strftime('%Y-%m-%d %H:%M IST')],
@@ -277,7 +285,7 @@ class FileScope:
         ])
         story.append(table)
 
-        # 3. Behavioral Analysis
+        # 3. Behavioral Analysis (Placeholder)
         story.append(Spacer(1, 6))
         story.append(Paragraph("3. Behavioral Analysis", styles['Heading1']))
         story.append(Paragraph("Note: Dynamic analysis not performed. Placeholder data shown.", styles['Normal']))
@@ -309,7 +317,6 @@ class FileScope:
             ["Digital Signature", self.analysis_results['static'].get('signature', 'N/A')],
             ["Imports/Exports", self.analysis_results['pe'].get('Analyzed', False) and self.analysis_results['pe'].get('Imports', 'N/A') or 'N/A'],
             ["Entropy Level", f"Mean {self.analysis_results['entropy']['Mean Entropy']}, Overall {self.analysis_results['entropy']['Overall Entropy']}"],
-            ["Notes", self.analysis_results['static'].get('notes', 'N/A')],
         ]
         table = Table(static_info, colWidths=[1.5*inch, 4.5*inch])
         table.setStyle([
@@ -320,7 +327,7 @@ class FileScope:
         ])
         story.append(table)
 
-        # 5. Threat Intelligence
+        # 5. Threat Intelligence (Placeholder)
         story.append(Spacer(1, 6))
         story.append(Paragraph("5. Threat Intelligence", styles['Heading1']))
         story.append(Paragraph("Note: Threat intelligence requires external database integration. Placeholder data shown.", styles['Normal']))
@@ -361,10 +368,10 @@ class FileScope:
         story.append(Spacer(1, 6))
         story.append(Paragraph("7. Report Metadata", styles['Heading1']))
         metadata_info = [
-            ["Report Generated By", "FileScope v1.1"],
-            ["Analyst Name", "Pratyush"],
+            ["Report Generated By", "FileScope v2.0"],
+            ["Analyst Name", "N/A"],
             ["Report Timestamp", datetime.datetime.now().strftime('%Y-%m-%d %H:%M IST')],
-            ["Case or Incident ID", random.randint(0, 999)],
+            ["Case or Incident ID", "N/A"],
         ]
         table = Table(metadata_info, colWidths=[1.5*inch, 4.5*inch])
         table.setStyle([
@@ -381,8 +388,9 @@ class FileScope:
             story.append(Spacer(1, 6))
             story.append(Paragraph("Entropy Graph", styles['Heading1']))
             story.append(Image(graph_buffer, width=5*inch, height=2*inch))
-            story.append(Spacer(1, 12))
-            story.append(Paragraph("Generated by FileScope v1.0", styles['Normal']))
+        
+        story.append(Spacer(1, 6))
+        story.append(Paragraph("Generated by Pratyush's FileScope v2.0", styles['Normal']))
 
         doc.build(story)
         messagebox.showinfo("Success", f"PDF report saved to {pdf_path}")
