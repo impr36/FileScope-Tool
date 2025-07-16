@@ -1,14 +1,4 @@
-import tkinter as tk
-from tkinter import filedialog, messagebox, ttk
-from tkinterdnd2 import DND_FILES, TkinterDnD
-from file_analyzer2 import FileAnalyzer
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Image
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib.units import inch
-import os
-import datetime
-from io import BytesIO
+from Imports import*
 
 class FileScope:
     def __init__(self, root):
