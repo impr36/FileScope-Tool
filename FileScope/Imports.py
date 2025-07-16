@@ -47,4 +47,6 @@ import winreg
 import gzip
 import exiftool
 import yara
-import rpm
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import inch
+from reportlab.lib.utils import ImageReader
