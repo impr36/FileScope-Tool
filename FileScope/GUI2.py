@@ -1,7 +1,7 @@
 from Imports import*
 from reportlab.platypus import Image
 from reportlab.lib.utils import ImageReader
-from file_analyzer5 import FileAnalyzer
+from file_analyzer2 import FileAnalyzer
 
 class FileScope:
     def __init__(self, root):
