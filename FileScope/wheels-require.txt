@@ -15,3 +15,4 @@ wheels\rarfile-4.2-py3-none-any.whl
 wheels\reportlab-4.4.2-py3-none-any.whl
 wheels\striprtf-0.0.29-py3-none-any.whl
 wheels\tkinterdnd2-0.4.3-py3-none-any.whl
+wheels\rpm-0.4.0-py3-none-any.whl
