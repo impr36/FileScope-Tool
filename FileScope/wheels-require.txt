@@ -9,10 +9,8 @@ Wheels\pycdlib-1.14.0-py2.py3-none-any.whl
 Wheels\pydicom-3.0.1-py3-none-any.whl
 Wheels\pymediainfo-7.0.1-py3-none-win_amd64.whl
 Wheels\PyPDF2-3.0.1-py3-none-any.whl
-Wheels\python_magic-0.4.27-py2.py3-none-any.whl
 Wheels\python_magic_bin-0.4.14-py2.py3-none-win_amd64.whl
 Wheels\rarfile-4.2-py3-none-any.whl
 Wheels\reportlab-4.4.2-py3-none-any.whl
 Wheels\striprtf-0.0.29-py3-none-any.whl
 Wheels\tkinterdnd2-0.4.3-py3-none-any.whl
-Wheels\rpm-0.4.0-py3-none-any.whl
